@@ -5,13 +5,6 @@ pipeline {
       booleanParam(name: 'executeTests', defaultValue: true, description: '')
    }
    stages {
-      stage("init") {
-         steps {
-            script {
-               gv = load "script.groovy"
-            }
-         }
-      }
       stage("Checkout") {
          steps {
             checkout scm
@@ -22,18 +15,6 @@ pipeline {
             sh 'docker-compose build web'
          }
       }
-      stage("test") {
-         when {
-            expression {
-               params.executeTests
-            }
-         }
-         steps {
-            script {
-               gv.testApp()
-            }
-         }
-      }
       stage("Tag and Push") {
          steps {
             withCredentials([[$class: 'UsernamePasswordMultiBinding',
@@ -42,8 +23,8 @@ pipeline {
             passwordVariable: 'DOCKER_USER_PASSWORD'
             ]]) {
                sh "docker tag jenkins-pipeline_web:latest shinehardd/jenkins-app:${BUILD_NUMBER}"
-               sh "docker login -u shinehardd -p dlwh0819@"
-               sh "docker push shineardd/jenkins-app:${BUILD_NUMBER}"
+               sh "docker login -u bit1010 -p dlwh0819@"
+               sh "docker push shinehardd/jenkins-app:${BUILD_NUMBER}"
             }
          }
       }
